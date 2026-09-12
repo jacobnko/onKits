@@ -21,12 +21,13 @@ export function ToolsExplorer() {
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
+    const categoryOrder = CATEGORIES.map((c) => c.key);
     return TOOLS.filter((tool) => {
       const matchesCategory = category === "all" || tool.category === category;
       const matchesQuery =
         query === "" || tool.name.toLowerCase().includes(query) || tool.description.toLowerCase().includes(query);
       return matchesCategory && matchesQuery;
-    });
+    }).sort((a, b) => categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category));
   }, [search, category]);
 
   const categoryLabel = CATEGORIES.find((c) => c.key === category)?.label;
