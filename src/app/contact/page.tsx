@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "OnKits에 대한 문의, 버그 제보, 제휴 제안을 이메일로 보내주세요.",
 };
 
-const CONTACT_EMAIL = "jacobkosmart@gmail.com";
+const CONTACT_EMAIL = "admin@jacobko.app";
 
 export default function ContactPage() {
   return (

@@ -65,7 +65,7 @@ export default function PrivacyPage() {
       </LegalSection>
 
       <LegalSection title="6. 개인정보 보호책임자 및 문의처">
-        <p>이메일: jacobkosmart@gmail.com</p>
+        <p>이메일: admin@jacobko.app</p>
       </LegalSection>
 
       <LegalSection title="7. 고지의 의무">
