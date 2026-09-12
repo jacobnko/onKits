@@ -1,0 +1,24 @@
+{
+  "common": {
+    "brand": "OnKits",
+    "tagline": "Always-On, Private Micro-Tools Crafted for Everyone"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "credit": "Engineered by JacobKo",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "home": {
+    "heroTitle": "Smart Micro-Tools for Everyone, OnKits",
+    "heroSubtitle": "No install, no sign-up. Calculators and converters, done right in your browser."
+  },
+  "ad": {
+    "label": "Sponsored / Advertisement"
+  }
+}
