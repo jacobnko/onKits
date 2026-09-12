@@ -14,6 +14,7 @@ import {
   Split,
   Sparkles,
   Table,
+  FileStack,
   type LucideIcon,
 } from "lucide-react";
 
@@ -146,5 +147,13 @@ export const TOOLS: ToolMeta[] = [
     category: "productivity",
     icon: Table,
     iconClassName: "bg-yellow-50 text-yellow-700",
+  },
+  {
+    slug: "receipt-pdf",
+    name: "영수증 PDF 취합기",
+    description: "영수증 이미지 여러 장을 A4 PDF 한 장으로 자동 취합",
+    category: "docs",
+    icon: FileStack,
+    iconClassName: "bg-sky-50 text-sky-600",
   },
 ];
