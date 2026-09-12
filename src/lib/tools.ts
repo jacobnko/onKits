@@ -15,6 +15,7 @@ import {
   Sparkles,
   Table,
   FileStack,
+  FileArchive,
   type LucideIcon,
 } from "lucide-react";
 
@@ -155,5 +156,13 @@ export const TOOLS: ToolMeta[] = [
     category: "docs",
     icon: FileStack,
     iconClassName: "bg-sky-50 text-sky-600",
+  },
+  {
+    slug: "doc-compress",
+    name: "서류 이미지 압축기",
+    description: "정부24 등 제출용 이미지를 목표 용량・해상도로 압축",
+    category: "docs",
+    icon: FileArchive,
+    iconClassName: "bg-stone-100 text-stone-600",
   },
 ];
