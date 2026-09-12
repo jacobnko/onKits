@@ -17,7 +17,7 @@ import {
   FileStack,
   FileArchive,
   IdCard,
-  Stamp,
+  Combine,
   type LucideIcon,
 } from "lucide-react";
 
@@ -176,11 +176,11 @@ export const TOOLS: ToolMeta[] = [
     iconClassName: "bg-purple-50 text-purple-600",
   },
   {
-    slug: "transparent-seal",
-    name: "도장 누끼 & 전자도장",
-    description: "종이 도장/서명 사진 투명 PNG 변환 & 전자도장 생성",
+    slug: "pdf-merge",
+    name: "PDF 병합기",
+    description: "여러 PDF 파일을 원하는 순서로 하나로 합치기",
     category: "docs",
-    icon: Stamp,
+    icon: Combine,
     iconClassName: "bg-red-50 text-red-600",
   },
 ];
