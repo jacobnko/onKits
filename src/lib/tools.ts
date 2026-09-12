@@ -17,6 +17,7 @@ import {
   FileStack,
   FileArchive,
   IdCard,
+  Stamp,
   type LucideIcon,
 } from "lucide-react";
 
@@ -173,5 +174,13 @@ export const TOOLS: ToolMeta[] = [
     category: "docs",
     icon: IdCard,
     iconClassName: "bg-purple-50 text-purple-600",
+  },
+  {
+    slug: "transparent-seal",
+    name: "도장 누끼 & 전자도장",
+    description: "종이 도장/서명 사진 투명 PNG 변환 & 전자도장 생성",
+    category: "docs",
+    icon: Stamp,
+    iconClassName: "bg-red-50 text-red-600",
   },
 ];
