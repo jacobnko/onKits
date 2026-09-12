@@ -37,24 +37,24 @@ export function ResultActions({ storageKey, summary }: { storageKey: string; sum
         <button
           type="button"
           onClick={handleSave}
-          className="rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+          className="rounded-xl border border-border px-1.5 py-2.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary sm:text-sm"
         >
           {saveState === "saved" ? "저장됨 ✓" : "결과 저장"}
         </button>
         <button
           type="button"
           onClick={handleCopy}
-          className="rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+          className="rounded-xl border border-border px-1.5 py-2.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary sm:text-sm"
         >
           {copyState === "copied" ? "복사됨 ✓" : "복사하기"}
         </button>
         <button
           type="button"
           onClick={handleKakaoShare}
-          className="flex items-center justify-center gap-1.5 rounded-xl border border-[#FEE500] bg-[#FEE500] py-2.5 text-sm font-medium text-[#191919] transition-colors hover:brightness-95"
+          className="flex items-center justify-center gap-1 whitespace-nowrap rounded-xl border border-[#FEE500] bg-[#FEE500] px-1.5 py-2.5 text-xs font-medium text-[#191919] transition-colors hover:brightness-95 sm:gap-1.5 sm:text-sm"
         >
           {kakaoState !== "notReady" && (
-            <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="currentColor" aria-hidden="true">
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" fill="currentColor" aria-hidden="true">
               <path d="M12 3C6.48 3 2 6.58 2 11c0 2.86 1.87 5.37 4.68 6.78-.15.54-.96 3.34-.99 3.56 0 0-.02.16.09.22.1.06.23.02.23.02.31-.04 3.6-2.36 4.17-2.76.58.08 1.19.13 1.82.13 5.52 0 10-3.58 10-8s-4.48-8-10-8Z" />
             </svg>
           )}
