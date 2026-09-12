@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default function SeveranceIrpPage() {
   return (
     <ToolPageShell
+      toolSlug="severance-irp"
       heroTitle={severanceIrpContent.heroTitle}
       heroSubtitle={severanceIrpContent.heroSubtitle}
       widget={<SeveranceIrpWidget />}

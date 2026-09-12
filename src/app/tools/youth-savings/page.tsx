@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default function YouthSavingsPage() {
   return (
     <ToolPageShell
+      toolSlug="youth-savings"
       heroTitle={youthSavingsContent.heroTitle}
       heroSubtitle={youthSavingsContent.heroSubtitle}
       widget={<YouthSavingsWidget />}

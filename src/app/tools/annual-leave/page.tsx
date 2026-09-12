@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default function AnnualLeavePage() {
   return (
     <ToolPageShell
+      toolSlug="annual-leave"
       heroTitle={annualLeaveContent.heroTitle}
       heroSubtitle={annualLeaveContent.heroSubtitle}
       widget={<AnnualLeaveWidget />}

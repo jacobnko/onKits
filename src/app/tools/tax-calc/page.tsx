@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default function TaxCalcPage() {
   return (
     <ToolPageShell
+      toolSlug="tax-calc"
       heroTitle={taxCalcContent.heroTitle}
       heroSubtitle={taxCalcContent.heroSubtitle}
       widget={<TaxCalcWidget />}

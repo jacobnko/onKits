@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default function UnemploymentBenefitPage() {
   return (
     <ToolPageShell
+      toolSlug="unemployment-benefit"
       heroTitle={unemploymentBenefitContent.heroTitle}
       heroSubtitle={unemploymentBenefitContent.heroSubtitle}
       widget={<UnemploymentBenefitWidget />}

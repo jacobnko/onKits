@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default function MarginVatPage() {
   return (
     <ToolPageShell
+      toolSlug="margin-vat"
       heroTitle={marginVatContent.heroTitle}
       heroSubtitle={marginVatContent.heroSubtitle}
       widget={<MarginVatWidget />}

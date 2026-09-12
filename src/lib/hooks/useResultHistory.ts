@@ -1,7 +1,8 @@
 "use client";
 
 // 계산 결과를 서버 전송 없이 브라우저 localStorage에만 저장하는 기록 훅
-import { useCallback, useState } from "react";
+// useSyncExternalStore로 읽어야 SSR(빈 목록)과 클라이언트(저장된 값) 간 하이드레이션 불일치가 생기지 않는다.
+import { useCallback, useSyncExternalStore } from "react";
 
 export type ResultHistoryEntry = {
   id: string;
@@ -10,9 +11,11 @@ export type ResultHistoryEntry = {
 };
 
 const MAX_ITEMS = 5;
+const EMPTY: ResultHistoryEntry[] = [];
+const cache = new Map<string, ResultHistoryEntry[]>();
+const listeners = new Set<() => void>();
 
-function readHistory(key: string): ResultHistoryEntry[] {
-  if (typeof window === "undefined") return [];
+function readFromStorage(key: string): ResultHistoryEntry[] {
   try {
     const raw = localStorage.getItem(key);
     return raw ? JSON.parse(raw) : [];
@@ -22,20 +25,35 @@ function readHistory(key: string): ResultHistoryEntry[] {
   }
 }
 
+function getSnapshot(key: string): ResultHistoryEntry[] {
+  if (!cache.has(key)) {
+    cache.set(key, readFromStorage(key));
+  }
+  return cache.get(key)!;
+}
+
+function setSnapshot(key: string, items: ResultHistoryEntry[]) {
+  cache.set(key, items);
+  try {
+    localStorage.setItem(key, JSON.stringify(items));
+  } catch {
+    // 저장 용량 초과 등은 무시 (기록 기능은 부가 기능일 뿐)
+  }
+  for (const listener of listeners) listener();
+}
+
+function subscribe(callback: () => void) {
+  listeners.add(callback);
+  return () => listeners.delete(callback);
+}
+
 export function useResultHistory(storageKey: string) {
   const key = `onkits:history:${storageKey}`;
-  const [items, setItems] = useState<ResultHistoryEntry[]>(() => readHistory(key));
 
-  const persist = useCallback(
-    (next: ResultHistoryEntry[]) => {
-      setItems(next);
-      try {
-        localStorage.setItem(key, JSON.stringify(next));
-      } catch {
-        // 저장 용량 초과 등은 무시 (기록 기능은 부가 기능일 뿐)
-      }
-    },
-    [key]
+  const items = useSyncExternalStore(
+    subscribe,
+    () => getSnapshot(key),
+    () => EMPTY
   );
 
   const addItem = useCallback(
@@ -45,13 +63,17 @@ export function useResultHistory(storageKey: string) {
         savedAt: Date.now(),
         summary,
       };
-      persist([entry, ...items].slice(0, MAX_ITEMS));
+      setSnapshot(key, [entry, ...getSnapshot(key)].slice(0, MAX_ITEMS));
     },
-    [items, persist]
+    [key]
   );
 
-  const removeItem = useCallback((id: string) => persist(items.filter((item) => item.id !== id)), [items, persist]);
-  const clear = useCallback(() => persist([]), [persist]);
+  const removeItem = useCallback(
+    (id: string) => setSnapshot(key, getSnapshot(key).filter((item) => item.id !== id)),
+    [key]
+  );
+
+  const clear = useCallback(() => setSnapshot(key, []), [key]);
 
   return { items, addItem, removeItem, clear };
 }

@@ -2,12 +2,14 @@
 import type { ReactNode } from "react";
 import { AdSlot } from "@/components/common/AdSlot";
 import { SeoFaqAccordion, type FaqItem } from "@/components/common/SeoFaqAccordion";
+import { TOOLS } from "@/lib/tools";
 import Link from "next/link";
 
 type RuleRow = { label: string; value: string };
 type RelatedTool = { slug: string; name: string; description: string };
 
 type Props = {
+  toolSlug: string;
   heroTitle: string;
   heroSubtitle: string;
   widget: ReactNode;
@@ -22,6 +24,7 @@ type Props = {
 };
 
 export function ToolPageShell({
+  toolSlug,
   heroTitle,
   heroSubtitle,
   widget,
@@ -34,6 +37,9 @@ export function ToolPageShell({
   relatedTitle,
   relatedTools,
 }: Props) {
+  const tool = TOOLS.find((t) => t.slug === toolSlug);
+  const Icon = tool?.icon;
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <AdSlot variant="top-leaderboard" className="mb-8" />
@@ -41,7 +47,12 @@ export function ToolPageShell({
       <div className="flex items-start gap-8">
         <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-10">
           {/* Zone 1: Interactive Tool Widget */}
-          <section className="flex flex-col gap-4 text-center">
+          <section className="flex flex-col items-center gap-4 text-center">
+            {Icon && tool && (
+              <span className={`flex h-14 w-14 items-center justify-center rounded-2xl ${tool.iconClassName}`}>
+                <Icon className="h-7 w-7" strokeWidth={2} />
+              </span>
+            )}
             <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{heroTitle}</h1>
             <p className="text-muted-foreground">{heroSubtitle}</p>
           </section>
@@ -89,16 +100,29 @@ export function ToolPageShell({
           <section className="flex flex-col gap-3">
             <h2 className="text-xl font-bold text-foreground">{relatedTitle}</h2>
             <div className="grid gap-3 sm:grid-cols-3">
-              {relatedTools.map((tool) => (
-                <Link
-                  key={tool.slug}
-                  href={`/tools/${tool.slug}`}
-                  className="rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40"
-                >
-                  <p className="font-semibold text-foreground">{tool.name}</p>
-                  <p className="mt-1 text-sm text-muted-foreground">{tool.description}</p>
-                </Link>
-              ))}
+              {relatedTools.map((related) => {
+                const relatedTool = TOOLS.find((t) => t.slug === related.slug);
+                const RelatedIcon = relatedTool?.icon;
+                return (
+                  <Link
+                    key={related.slug}
+                    href={`/tools/${related.slug}`}
+                    className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40"
+                  >
+                    {RelatedIcon && relatedTool && (
+                      <span
+                        className={`flex h-9 w-9 items-center justify-center rounded-xl ${relatedTool.iconClassName}`}
+                      >
+                        <RelatedIcon className="h-4 w-4" strokeWidth={2} />
+                      </span>
+                    )}
+                    <div>
+                      <p className="font-semibold text-foreground">{related.name}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{related.description}</p>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </section>
         </div>

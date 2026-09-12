@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default function RealEstateFeePage() {
   return (
     <ToolPageShell
+      toolSlug="real-estate-fee"
       heroTitle={realEstateFeeContent.heroTitle}
       heroSubtitle={realEstateFeeContent.heroSubtitle}
       widget={<RealEstateFeeWidget />}
