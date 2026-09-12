@@ -24,10 +24,11 @@ import {
 
 export type ToolCategory = "finance" | "docs" | "productivity";
 
+// 예상 트래픽이 높은 순서로 정렬 (금융/세금 > 생산성 유틸 > 문서/이미지)
 export const CATEGORIES: { key: ToolCategory; label: string }[] = [
   { key: "finance", label: "금융・세금・노동" },
-  { key: "docs", label: "문서・이미지・행정" },
   { key: "productivity", label: "생산성・콘텐츠・텍스트" },
+  { key: "docs", label: "문서・이미지・행정" },
 ];
 
 export type ToolMeta = {
