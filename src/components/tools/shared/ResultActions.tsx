@@ -3,6 +3,7 @@
 // 계산 결과 저장(브라우저 로컬 기록)과 공유(모바일 공유 시트/카카오톡 · 데스크톱 링크 복사)를 담당하는 공용 액션 바
 import { useState } from "react";
 import { useResultHistory } from "@/lib/hooks/useResultHistory";
+import { shareToKakao, KAKAO_SHARE_ENABLED } from "@/lib/kakao";
 
 export function ResultActions({ storageKey, summary }: { storageKey: string; summary: string }) {
   const { items, addItem, removeItem, clear } = useResultHistory(storageKey);
@@ -30,9 +31,13 @@ export function ResultActions({ storageKey, summary }: { storageKey: string; sum
     setTimeout(() => setShareState("idle"), 2000);
   }
 
+  function handleKakaoShare() {
+    shareToKakao(summary, window.location.href);
+  }
+
   return (
     <div className="flex flex-col gap-3">
-      <div className="grid grid-cols-2 gap-2">
+      <div className={`grid gap-2 ${KAKAO_SHARE_ENABLED ? "grid-cols-3" : "grid-cols-2"}`}>
         <button
           type="button"
           onClick={handleSave}
@@ -47,6 +52,15 @@ export function ResultActions({ storageKey, summary }: { storageKey: string; sum
         >
           {shareState === "shared" ? "공유 완료" : shareState === "copied" ? "링크가 복사되었습니다" : "공유하기"}
         </button>
+        {KAKAO_SHARE_ENABLED && (
+          <button
+            type="button"
+            onClick={handleKakaoShare}
+            className="rounded-xl border border-[#FEE500] bg-[#FEE500] py-2.5 text-sm font-medium text-[#191919] transition-colors hover:brightness-95"
+          >
+            카카오톡 공유
+          </button>
+        )}
       </div>
 
       {items.length > 0 && (
