@@ -2,12 +2,14 @@
 
 // 프리랜서 3.3% 원천징수 계산기와 알바 주휴수당 계산기를 탭으로 제공하는 인터랙티브 위젯
 import { useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
 import {
   calcFreelanceWithholding,
   type FreelanceWithholdingMode,
 } from "@/lib/calculations/freelance-withholding";
 import { calcWeeklyHolidayPay } from "@/lib/calculations/weekly-holiday-pay";
+import { AmountInput } from "@/components/tools/shared/AmountInput";
+import { ResultRow } from "@/components/tools/shared/ResultRow";
+import { ResultActions } from "@/components/tools/shared/ResultActions";
 
 type Tab = "freelance" | "weeklyHoliday";
 
@@ -15,31 +17,7 @@ function formatWon(value: number) {
   return `${value.toLocaleString("ko-KR")}원`;
 }
 
-function ResultRow({ label, value, emphasize = false }: { label: string; value: string; emphasize?: boolean }) {
-  return (
-    <div className="flex items-center justify-between py-2">
-      <span className="text-sm text-muted-foreground">{label}</span>
-      <span className={emphasize ? "text-lg font-bold text-primary" : "text-sm font-medium text-foreground"}>
-        {value}
-      </span>
-    </div>
-  );
-}
-
-function AmountInput({ value, onChange }: { value: number; onChange: (value: number) => void }) {
-  return (
-    <input
-      type="text"
-      inputMode="numeric"
-      value={value === 0 ? "" : value.toLocaleString("ko-KR")}
-      onChange={(e) => onChange(Number(e.target.value.replace(/[^0-9]/g, "")) || 0)}
-      className="rounded-xl border border-border px-4 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-primary/30"
-    />
-  );
-}
-
 export function TaxCalcWidget() {
-  const t = useTranslations("tools.taxCalc.widget");
   const [tab, setTab] = useState<Tab>("freelance");
 
   const [freelanceAmount, setFreelanceAmount] = useState(2000000);
@@ -58,14 +36,10 @@ export function TaxCalcWidget() {
     [hourlyWage, weeklyHours]
   );
 
-  function handleCopy() {
-    const text =
-      tab === "freelance"
-        ? `${t("grossPay")}: ${formatWon(freelanceResult.grossPay)}\n${t("withholdingTax")}: ${formatWon(freelanceResult.withholdingTax)}\n${t("netPay")}: ${formatWon(freelanceResult.netPay)}`
-        : `${t("weeklyHolidayPay")}: ${formatWon(weeklyHolidayResult.weeklyHolidayPay)}\n${t("weeklyTotalPay")}: ${formatWon(weeklyHolidayResult.weeklyTotalPay)}\n${t("monthlyEstimatedPay")}: ${formatWon(weeklyHolidayResult.monthlyEstimatedPay)}`;
-
-    navigator.clipboard?.writeText(text);
-  }
+  const summary =
+    tab === "freelance"
+      ? `지급액: ${formatWon(freelanceResult.grossPay)}\n원천징수세액 (3.3%): ${formatWon(freelanceResult.withholdingTax)}\n실수령액: ${formatWon(freelanceResult.netPay)}`
+      : `주휴수당: ${formatWon(weeklyHolidayResult.weeklyHolidayPay)}\n주급 합계: ${formatWon(weeklyHolidayResult.weeklyTotalPay)}\n월 환산 예상 급여 (세전): ${formatWon(weeklyHolidayResult.monthlyEstimatedPay)}`;
 
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
@@ -77,7 +51,7 @@ export function TaxCalcWidget() {
             tab === "freelance" ? "bg-primary text-primary-foreground shadow-sm" : "text-secondary-foreground"
           }`}
         >
-          {t("tabFreelance")}
+          프리랜서 원천징수
         </button>
         <button
           type="button"
@@ -86,7 +60,7 @@ export function TaxCalcWidget() {
             tab === "weeklyHoliday" ? "bg-primary text-primary-foreground shadow-sm" : "text-secondary-foreground"
           }`}
         >
-          {t("tabWeeklyHoliday")}
+          알바 주휴수당
         </button>
       </div>
 
@@ -100,7 +74,7 @@ export function TaxCalcWidget() {
                 freelanceMode === "gross" ? "border-primary text-primary" : "border-border text-muted-foreground"
               }`}
             >
-              {t("modeGross")}
+              지급액 기준
             </button>
             <button
               type="button"
@@ -109,32 +83,32 @@ export function TaxCalcWidget() {
                 freelanceMode === "net" ? "border-primary text-primary" : "border-border text-muted-foreground"
               }`}
             >
-              {t("modeNet")}
+              실수령액 기준
             </button>
           </div>
 
           <label className="flex flex-col gap-1.5 text-sm">
             <span className="font-medium text-foreground">
-              {freelanceMode === "gross" ? t("grossPayLabel") : t("netPayLabel")}
+              {freelanceMode === "gross" ? "지급액 (세전, 원)" : "목표 실수령액 (원)"}
             </span>
             <AmountInput value={freelanceAmount} onChange={setFreelanceAmount} />
           </label>
 
           <div className="mt-2 divide-y divide-border rounded-xl bg-secondary/40 px-4">
-            <ResultRow label={t("grossPay")} value={formatWon(freelanceResult.grossPay)} />
-            <ResultRow label={t("withholdingTax")} value={`- ${formatWon(freelanceResult.withholdingTax)}`} />
-            <ResultRow label={t("netPay")} value={formatWon(freelanceResult.netPay)} emphasize />
+            <ResultRow label="지급액" value={formatWon(freelanceResult.grossPay)} />
+            <ResultRow label="원천징수세액 (3.3%)" value={`- ${formatWon(freelanceResult.withholdingTax)}`} />
+            <ResultRow label="실수령액" value={formatWon(freelanceResult.netPay)} emphasize />
           </div>
         </div>
       ) : (
         <div className="flex flex-col gap-4">
           <label className="flex flex-col gap-1.5 text-sm">
-            <span className="font-medium text-foreground">{t("hourlyWageLabel")}</span>
+            <span className="font-medium text-foreground">시급 (원)</span>
             <AmountInput value={hourlyWage} onChange={setHourlyWage} />
           </label>
 
           <label className="flex flex-col gap-1.5 text-sm">
-            <span className="font-medium text-foreground">{t("weeklyHoursLabel")}</span>
+            <span className="font-medium text-foreground">1주 근무시간 (시간)</span>
             <input
               type="number"
               inputMode="numeric"
@@ -148,15 +122,15 @@ export function TaxCalcWidget() {
 
           {!weeklyHolidayResult.eligible && (
             <p className="rounded-xl bg-secondary/60 px-4 py-2.5 text-sm text-secondary-foreground">
-              {t("notEligible")}
+              주 15시간 미만 근무는 주휴수당 지급 대상이 아닙니다.
             </p>
           )}
 
           <div className="mt-2 divide-y divide-border rounded-xl bg-secondary/40 px-4">
-            <ResultRow label={t("weeklyHolidayPay")} value={formatWon(weeklyHolidayResult.weeklyHolidayPay)} />
-            <ResultRow label={t("weeklyTotalPay")} value={formatWon(weeklyHolidayResult.weeklyTotalPay)} />
+            <ResultRow label="주휴수당" value={formatWon(weeklyHolidayResult.weeklyHolidayPay)} />
+            <ResultRow label="주급 합계" value={formatWon(weeklyHolidayResult.weeklyTotalPay)} />
             <ResultRow
-              label={t("monthlyEstimatedPay")}
+              label="월 환산 예상 급여 (세전)"
               value={formatWon(weeklyHolidayResult.monthlyEstimatedPay)}
               emphasize
             />
@@ -164,15 +138,13 @@ export function TaxCalcWidget() {
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={handleCopy}
-        className="mt-5 w-full rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
-      >
-        {t("copyResult")}
-      </button>
+      <div className="mt-5">
+        <ResultActions storageKey="tax-calc" summary={summary} />
+      </div>
 
-      <p className="mt-4 text-xs text-muted-foreground">{t("disclaimer")}</p>
+      <p className="mt-4 text-xs text-muted-foreground">
+        본 계산 결과는 참고용이며, 실제 세액·급여는 4대보험 공제, 간이세액표 등에 따라 달라질 수 있습니다.
+      </p>
     </div>
   );
 }

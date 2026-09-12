@@ -1,6 +1,4 @@
 // CLS(레이아웃 시프트) 방지를 위해 고정 최소 높이를 예약하는 광고 슬롯 래퍼
-import { useTranslations } from "next-intl";
-
 const VARIANT_CLASS = {
   "top-leaderboard": "min-h-[90px] md:min-h-[100px] w-full",
   "in-content-native": "min-h-[250px] md:min-h-[280px] w-full",
@@ -16,13 +14,11 @@ export function AdSlot({
   variant: AdVariant;
   className?: string;
 }) {
-  const t = useTranslations("ad");
-
   return (
     <div
       className={`flex items-center justify-center rounded-2xl border border-dashed border-border bg-muted text-xs text-muted-foreground ${VARIANT_CLASS[variant]} ${className}`}
     >
-      {t("label")}
+      스폰서 / Advertisement
     </div>
   );
 }
