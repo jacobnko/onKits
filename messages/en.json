@@ -24,5 +24,24 @@
   },
   "ad": {
     "label": "Sponsored / Advertisement"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for may have been removed or its address may have changed.",
+    "cta": "Back to home"
+  },
+  "toolCards": {
+    "marginVat": {
+      "name": "Margin & VAT Calculator",
+      "description": "Net margin after marketplace fees & reverse VAT"
+    },
+    "annualLeave": {
+      "name": "Annual Leave Calculator",
+      "description": "Annual leave by fiscal year or hire date"
+    },
+    "severanceIrp": {
+      "name": "Severance Pay Calculator",
+      "description": "Statutory severance & IRP tax savings simulator"
+    }
   }
 }
