@@ -8,16 +8,16 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-slate-200 bg-slate-50">
-      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+    <footer className="border-t border-border bg-secondary/40">
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <p>
           &copy; {year} {tCommon("brand")}. {t("rights")} — {t("credit")}
         </p>
         <div className="flex gap-4">
-          <Link href="/privacy" className="hover:text-indigo-600">
+          <Link href="/privacy" className="transition-colors hover:text-primary">
             {t("privacy")}
           </Link>
-          <Link href="/terms" className="hover:text-indigo-600">
+          <Link href="/terms" className="transition-colors hover:text-primary">
             {t("terms")}
           </Link>
         </div>

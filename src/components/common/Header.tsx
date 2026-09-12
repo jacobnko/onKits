@@ -8,20 +8,25 @@ export function Header() {
   const tCommon = useTranslations("common");
 
   return (
-    <header className="border-b border-slate-200 bg-white/80 backdrop-blur sticky top-0 z-40">
+    <header className="sticky top-0 z-40 border-b border-border bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-        <Link href="/" className="text-lg font-semibold tracking-tight text-slate-900">
-          {tCommon("brand")}
+        <Link href="/" className="flex items-center gap-2">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
+            On
+          </span>
+          <span className="text-lg font-semibold tracking-tight text-foreground">
+            {tCommon("brand")}
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm text-slate-600 sm:flex">
-          <Link href="/" className="hover:text-indigo-600">
+        <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground sm:flex">
+          <Link href="/" className="transition-colors hover:text-primary">
             {t("home")}
           </Link>
-          <Link href="/about" className="hover:text-indigo-600">
+          <Link href="/about" className="transition-colors hover:text-primary">
             {t("about")}
           </Link>
-          <Link href="/contact" className="hover:text-indigo-600">
+          <Link href="/contact" className="transition-colors hover:text-primary">
             {t("contact")}
           </Link>
         </nav>

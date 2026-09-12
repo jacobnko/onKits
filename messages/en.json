@@ -15,8 +15,12 @@
     "terms": "Terms of Service"
   },
   "home": {
+    "badge": "100% Free · No Sign-up",
     "heroTitle": "Smart Micro-Tools for Everyone, OnKits",
-    "heroSubtitle": "No install, no sign-up. Calculators and converters, done right in your browser."
+    "heroSubtitle": "No install, no sign-up. Calculators and converters, done right in your browser.",
+    "trust1": "No installation",
+    "trust2": "No data stored on servers",
+    "trust3": "Completely free"
   },
   "ad": {
     "label": "Sponsored / Advertisement"

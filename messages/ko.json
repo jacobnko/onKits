@@ -15,8 +15,12 @@
     "terms": "이용약관"
   },
   "home": {
+    "badge": "완전 무료 · 회원가입 없음",
     "heroTitle": "모두를 위한 스마트 실무 키트, OnKits",
-    "heroSubtitle": "설치 없이, 회원가입 없이. 브라우저에서 바로 끝내는 계산기와 변환기 모음."
+    "heroSubtitle": "설치 없이, 회원가입 없이. 브라우저에서 바로 끝내는 계산기와 변환기 모음.",
+    "trust1": "설치 필요 없음",
+    "trust2": "개인정보 서버 저장 없음",
+    "trust3": "완전 무료"
   },
   "ad": {
     "label": "스폰서 / Advertisement"
