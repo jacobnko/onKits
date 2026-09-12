@@ -51,8 +51,13 @@ export function ResultActions({ storageKey, summary }: { storageKey: string; sum
         <button
           type="button"
           onClick={handleKakaoShare}
-          className="rounded-xl border border-[#FEE500] bg-[#FEE500] py-2.5 text-sm font-medium text-[#191919] transition-colors hover:brightness-95"
+          className="flex items-center justify-center gap-1.5 rounded-xl border border-[#FEE500] bg-[#FEE500] py-2.5 text-sm font-medium text-[#191919] transition-colors hover:brightness-95"
         >
+          {kakaoState !== "notReady" && (
+            <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="currentColor" aria-hidden="true">
+              <path d="M12 3C6.48 3 2 6.58 2 11c0 2.86 1.87 5.37 4.68 6.78-.15.54-.96 3.34-.99 3.56 0 0-.02.16.09.22.1.06.23.02.23.02.31-.04 3.6-2.36 4.17-2.76.58.08 1.19.13 1.82.13 5.52 0 10-3.58 10-8s-4.48-8-10-8Z" />
+            </svg>
+          )}
           {kakaoState === "notReady" ? "설정 준비 중" : "카카오톡 공유"}
         </button>
       </div>
