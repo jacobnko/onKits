@@ -19,12 +19,21 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "OnKits — 모두의 스마트 실무 키트",
   description: "설치 없이 브라우저에서 끝내는 모두의 스마트 실무 키트",
+  other: {
+    "google-adsense-account": "ca-pub-8787171365157933",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8787171365157933"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         {process.env.NEXT_PUBLIC_KAKAO_JS_KEY && (
           <Script
             src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
