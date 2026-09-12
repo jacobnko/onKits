@@ -1,14 +1,15 @@
 "use client";
 
-// 계산 결과 저장(브라우저 로컬 기록)과 공유(모바일 공유 시트/카카오톡 · 데스크톱 링크 복사)를 담당하는 공용 액션 바
+// 계산 결과 저장(브라우저 로컬 기록)・링크 복사・카카오톡 공유를 담당하는 공용 액션 바
 import { useState } from "react";
 import { useResultHistory } from "@/lib/hooks/useResultHistory";
-import { shareToKakao, KAKAO_SHARE_ENABLED } from "@/lib/kakao";
+import { shareToKakao } from "@/lib/kakao";
 
 export function ResultActions({ storageKey, summary }: { storageKey: string; summary: string }) {
   const { items, addItem, removeItem, clear } = useResultHistory(storageKey);
   const [saveState, setSaveState] = useState<"idle" | "saved">("idle");
-  const [shareState, setShareState] = useState<"idle" | "shared" | "copied">("idle");
+  const [copyState, setCopyState] = useState<"idle" | "copied">("idle");
+  const [kakaoState, setKakaoState] = useState<"idle" | "notReady">("idle");
 
   function handleSave() {
     addItem(summary);
@@ -16,28 +17,23 @@ export function ResultActions({ storageKey, summary }: { storageKey: string; sum
     setTimeout(() => setSaveState("idle"), 1500);
   }
 
-  async function handleShare() {
-    if (typeof navigator !== "undefined" && navigator.share) {
-      try {
-        await navigator.share({ title: document.title, text: summary, url: window.location.href });
-        setShareState("shared");
-      } catch {
-        // 사용자가 공유 시트를 취소한 경우는 무시
-      }
-    } else {
-      await navigator.clipboard?.writeText(`${summary}\n${window.location.href}`);
-      setShareState("copied");
-    }
-    setTimeout(() => setShareState("idle"), 2000);
+  async function handleCopy() {
+    await navigator.clipboard?.writeText(`${summary}\n${window.location.href}`);
+    setCopyState("copied");
+    setTimeout(() => setCopyState("idle"), 2000);
   }
 
   function handleKakaoShare() {
-    shareToKakao(summary, window.location.href);
+    const sent = shareToKakao(summary, window.location.href);
+    if (!sent) {
+      setKakaoState("notReady");
+      setTimeout(() => setKakaoState("idle"), 2000);
+    }
   }
 
   return (
     <div className="flex flex-col gap-3">
-      <div className={`grid gap-2 ${KAKAO_SHARE_ENABLED ? "grid-cols-3" : "grid-cols-2"}`}>
+      <div className="grid grid-cols-3 gap-2">
         <button
           type="button"
           onClick={handleSave}
@@ -47,20 +43,18 @@ export function ResultActions({ storageKey, summary }: { storageKey: string; sum
         </button>
         <button
           type="button"
-          onClick={handleShare}
+          onClick={handleCopy}
           className="rounded-xl border border-border py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
         >
-          {shareState === "shared" ? "공유 완료" : shareState === "copied" ? "링크가 복사되었습니다" : "공유하기"}
+          {copyState === "copied" ? "복사됨 ✓" : "복사하기"}
         </button>
-        {KAKAO_SHARE_ENABLED && (
-          <button
-            type="button"
-            onClick={handleKakaoShare}
-            className="rounded-xl border border-[#FEE500] bg-[#FEE500] py-2.5 text-sm font-medium text-[#191919] transition-colors hover:brightness-95"
-          >
-            카카오톡 공유
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={handleKakaoShare}
+          className="rounded-xl border border-[#FEE500] bg-[#FEE500] py-2.5 text-sm font-medium text-[#191919] transition-colors hover:brightness-95"
+        >
+          {kakaoState === "notReady" ? "설정 준비 중" : "카카오톡 공유"}
+        </button>
       </div>
 
       {items.length > 0 && (

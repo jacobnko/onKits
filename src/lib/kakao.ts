@@ -34,5 +34,3 @@ export function shareToKakao(text: string, url: string) {
   });
   return true;
 }
-
-export const KAKAO_SHARE_ENABLED = Boolean(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
