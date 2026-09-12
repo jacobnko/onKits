@@ -42,3 +42,18 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+/* 카테고리 C(생산성·콘텐츠·텍스트) 전용 웜톤 테마 - 기존 컴포넌트를 감싸기만 하면
+   bg-primary/text-primary 등 시맨틱 유틸리티가 CSS 변수 재정의를 그대로 상속해 색상만 바뀐다 */
+.theme-productivity {
+  --primary: #f97316;
+  --primary-hover: #ea580c;
+  --primary-foreground: #ffffff;
+  --secondary: #fff7ed;
+  --secondary-foreground: #9a3412;
+  --accent: #eab308;
+  --accent-foreground: #ffffff;
+  --muted: #fef3ec;
+  --muted-foreground: #92714f;
+  --border: #fed7aa;
+}
