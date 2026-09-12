@@ -16,6 +16,7 @@ import {
   Table,
   FileStack,
   FileArchive,
+  IdCard,
   type LucideIcon,
 } from "lucide-react";
 
@@ -164,5 +165,13 @@ export const TOOLS: ToolMeta[] = [
     category: "docs",
     icon: FileArchive,
     iconClassName: "bg-stone-100 text-stone-600",
+  },
+  {
+    slug: "resume-photo",
+    name: "이력서 사진 크롭",
+    description: "3×4, 3.5×4.5 규격 크롭 & 단색 배경 변환",
+    category: "docs",
+    icon: IdCard,
+    iconClassName: "bg-purple-50 text-purple-600",
   },
 ];
