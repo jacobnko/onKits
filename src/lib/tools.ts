@@ -18,6 +18,7 @@ import {
   FileArchive,
   IdCard,
   Combine,
+  Images,
   type LucideIcon,
 } from "lucide-react";
 
@@ -182,5 +183,13 @@ export const TOOLS: ToolMeta[] = [
     category: "docs",
     icon: Combine,
     iconClassName: "bg-red-50 text-red-600",
+  },
+  {
+    slug: "image-converter",
+    name: "이미지 포맷 변환기",
+    description: "JPG・PNG・WebP 서로 변환 & 크기 조절",
+    category: "docs",
+    icon: Images,
+    iconClassName: "bg-green-50 text-green-600",
   },
 ];
