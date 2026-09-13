@@ -6,6 +6,12 @@ import { generateReceiptPdf, RECEIPTS_PER_PAGE, type ReceiptImage } from "@/lib/
 
 type UploadedImage = ReceiptImage & { id: string; name: string };
 
+function isIOSSafari() {
+  if (typeof navigator === "undefined") return false;
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  return isIOS;
+}
+
 function readImage(file: File): Promise<UploadedImage> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -32,6 +38,7 @@ function readImage(file: File): Promise<UploadedImage> {
 export function ReceiptPdfWidget() {
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showIosHint, setShowIosHint] = useState(false);
 
   async function handleFiles(fileList: FileList | null) {
     if (!fileList) return;
@@ -44,12 +51,28 @@ export function ReceiptPdfWidget() {
     setImages((prev) => prev.filter((img) => img.id !== id));
   }
 
+  function moveImage(id: string, direction: -1 | 1) {
+    setImages((prev) => {
+      const index = prev.findIndex((img) => img.id === id);
+      const targetIndex = index + direction;
+      if (index === -1 || targetIndex < 0 || targetIndex >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
+      return next;
+    });
+  }
+
   async function handleGenerate() {
     if (images.length === 0) return;
     setIsGenerating(true);
     try {
       const doc = generateReceiptPdf(images);
-      doc.save("onkits-receipts.pdf");
+      if (isIOSSafari()) {
+        window.open(doc.output("bloburl"), "_blank");
+        setShowIosHint(true);
+      } else {
+        doc.save("onkits-receipts.pdf");
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -74,18 +97,41 @@ export function ReceiptPdfWidget() {
       {images.length > 0 && (
         <>
           <div className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-4">
-            {images.map((image) => (
-              <div key={image.id} className="group relative aspect-[3/4] overflow-hidden rounded-lg border border-border">
+            {images.map((image, index) => (
+              <div key={image.id} className="relative aspect-[3/4] overflow-hidden rounded-lg border border-border">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={image.dataUrl} alt={image.name} className="h-full w-full object-cover" />
+                <span className="absolute left-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-foreground/70 text-[10px] text-white">
+                  {index + 1}
+                </span>
                 <button
                   type="button"
                   onClick={() => removeImage(image.id)}
-                  className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-foreground/70 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100"
+                  className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-foreground/70 text-xs text-white"
                   aria-label="삭제"
                 >
                   ✕
                 </button>
+                <div className="absolute inset-x-1 bottom-1 flex justify-between gap-1">
+                  <button
+                    type="button"
+                    onClick={() => moveImage(image.id, -1)}
+                    disabled={index === 0}
+                    className="flex h-6 w-6 items-center justify-center rounded-full bg-foreground/70 text-xs text-white disabled:opacity-30"
+                    aria-label="앞으로 이동"
+                  >
+                    ◀
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveImage(image.id, 1)}
+                    disabled={index === images.length - 1}
+                    className="flex h-6 w-6 items-center justify-center rounded-full bg-foreground/70 text-xs text-white disabled:opacity-30"
+                    aria-label="뒤로 이동"
+                  >
+                    ▶
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -102,6 +148,13 @@ export function ReceiptPdfWidget() {
           >
             {isGenerating ? "PDF 생성 중..." : "PDF로 다운로드"}
           </button>
+
+          {showIosHint && (
+            <p className="mt-3 rounded-lg bg-secondary/40 px-3 py-2 text-xs text-secondary-foreground">
+              iPhone・iPad Safari는 새 탭에서 PDF를 바로 보여줘요. 화면 오른쪽 위 공유 아이콘을 눌러 &quot;파일에
+              저장&quot;을 선택하면 다운로드됩니다.
+            </p>
+          )}
         </>
       )}
 
