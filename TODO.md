@@ -1,4 +1,3 @@
 # TODO
 
-- [ ] 카카오톡 공유 버튼 코드는 구현 완료(`src/lib/kakao.ts`, `ResultActions`) — [Kakao Developers](https://developers.kakao.com)에서 앱 생성 후 JavaScript 키 발급, Web 플랫폼에 `https://onkits.jacobko.app` 등록, `NEXT_PUBLIC_KAKAO_JS_KEY` 환경변수를 로컬(`.env.local`)과 Vercel에 설정해야 버튼이 노출됨.
-- [ ] 영어(en)/프랑스어(fr) 등 다국어 지원 — 단순 번역이 아니라 각 언어권에 맞는 콘텐츠로 재설계해서 나중에 추가.
+- [ ] 글로벌(비한국어권) 버전은 나중에 별도 사이트/프로젝트로 진행. `[locale]` 라우팅을 이 프로젝트에 다시 도입하지 않는다 — Category A(세금/노동)는 한국 법령 기반이라 번역 대상이 아니고, Category B/C(변환기・생산성 툴)만 국가 무관하게 재활용 가능. OnKits(한국어)는 이대로 계속 키운다.
