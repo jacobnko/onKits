@@ -6,12 +6,6 @@ import { generateReceiptPdf, RECEIPTS_PER_PAGE, type ReceiptImage } from "@/lib/
 
 type UploadedImage = ReceiptImage & { id: string; name: string };
 
-function isIOSSafari() {
-  if (typeof navigator === "undefined") return false;
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  return isIOS;
-}
-
 function readImage(file: File): Promise<UploadedImage> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -38,17 +32,19 @@ function readImage(file: File): Promise<UploadedImage> {
 export function ReceiptPdfWidget() {
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [showIosHint, setShowIosHint] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
 
   async function handleFiles(fileList: FileList | null) {
     if (!fileList) return;
     const files = Array.from(fileList).filter((f) => f.type.startsWith("image/"));
     const loaded = await Promise.all(files.map(readImage));
     setImages((prev) => [...prev, ...loaded]);
+    setPdfUrl("");
   }
 
   function removeImage(id: string) {
     setImages((prev) => prev.filter((img) => img.id !== id));
+    setPdfUrl("");
   }
 
   function moveImage(id: string, direction: -1 | 1) {
@@ -60,6 +56,7 @@ export function ReceiptPdfWidget() {
       [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
       return next;
     });
+    setPdfUrl("");
   }
 
   async function handleGenerate() {
@@ -67,12 +64,8 @@ export function ReceiptPdfWidget() {
     setIsGenerating(true);
     try {
       const doc = generateReceiptPdf(images);
-      if (isIOSSafari()) {
-        window.open(doc.output("bloburl"), "_blank");
-        setShowIosHint(true);
-      } else {
-        doc.save("onkits-receipts.pdf");
-      }
+      const blob = doc.output("blob");
+      setPdfUrl(URL.createObjectURL(blob));
     } finally {
       setIsGenerating(false);
     }
@@ -146,14 +139,17 @@ export function ReceiptPdfWidget() {
             disabled={isGenerating}
             className="mt-4 w-full rounded-xl bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover disabled:opacity-60"
           >
-            {isGenerating ? "PDF 생성 중..." : "PDF로 다운로드"}
+            {isGenerating ? "PDF 생성 중..." : pdfUrl ? "PDF 다시 생성" : "PDF 생성하기"}
           </button>
 
-          {showIosHint && (
-            <p className="mt-3 rounded-lg bg-secondary/40 px-3 py-2 text-xs text-secondary-foreground">
-              iPhone・iPad Safari는 새 탭에서 PDF를 바로 보여줘요. 화면 오른쪽 위 공유 아이콘을 눌러 &quot;파일에
-              저장&quot;을 선택하면 다운로드됩니다.
-            </p>
+          {pdfUrl && (
+            <a
+              href={pdfUrl}
+              download="onkits-receipts.pdf"
+              className="mt-3 block rounded-xl border border-border py-2.5 text-center text-sm font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+            >
+              PDF 다운로드
+            </a>
           )}
         </>
       )}
